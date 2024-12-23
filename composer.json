@@ -1,0 +1,14 @@
+{
+    "name": "mztx/mztx-wp-simple-et-plugin",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Zapf",
+            "email": "m.zapf@mztx.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    }
+}
