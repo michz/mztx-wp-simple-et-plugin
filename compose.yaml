@@ -1,0 +1,51 @@
+---
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: no
+    ports:
+      - name: http
+        target: 80
+        host_ip: 127.0.0.1
+        published: "8080"
+        protocol: tcp
+        app_protocol: http
+        mode: host
+    environment:
+      WORDPRESS_DEBUG: "true"
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./wp-content/plugins/mztx-wp-simple-et:/var/www/html/wp-content/plugins/mztx-wp-simple-et
+      - wordpress:/var/www/html
+    links:
+      - db
+
+  db:
+    image: mariadb:latest
+    restart: no
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_DATABASE: wordpress
+    volumes:
+      - db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    links:
+      - db
+
+volumes:
+  wordpress:
+  db:
