@@ -1,0 +1,9 @@
+{
+  "slug": "mztx-wp-simple-et-plugin",
+  "version": "{{ version }}",
+  "package": "{{ download_url }}",
+  "autoupdate": true,
+  "requires_php": "8.2",
+  "tested": "6.7.1",
+  "translations": []
+}
