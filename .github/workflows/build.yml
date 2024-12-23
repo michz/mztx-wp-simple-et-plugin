@@ -1,0 +1,56 @@
+name: Build
+
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:
+      - '*' # Push events to every tag not containing /
+
+jobs:
+  package:
+    #if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Write revision file
+        run: |
+          export VERSION="${GITHUB_REF#refs/*/v}"
+          echo "$VERSION" > wp-content/plugins/mztx-wp-simple-et-plugin/REVISION
+          sed -i "s/{{[[:space:]]*version[[:space:]]*}}/$VERSION/g" wp-content/plugins/mztx-wp-simple-et-plugin/mztx-wp-simple-et-plugin.php
+
+      - name: Package release file
+        run: |
+          mkdir dist
+          cd wp-content/plugins/mztx-wp-simple-et-plugin
+          zip ../../../dist/mztx-wp-simple-et-plugin.zip *
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref }}
+          body: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          files: dist/mztx-wp-simple-et-plugin.zip
+
+      - name: Create pages dist
+        run: mkdir ./dist_pages
+
+      - name: Write update manifest
+        run: |
+          export VERSION="${GITHUB_REF#refs/*/v}"
+          export DOWNLOAD_URL="${{ fromJSON(steps.create_release.outputs.assets)[0].browser_download_url }}"
+          php build_plugin_update_manifest.php ./etc/update.tpl.json > ./dist_pages/update.json
+
+      - name: Deploy update manifest to github pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist_pages
