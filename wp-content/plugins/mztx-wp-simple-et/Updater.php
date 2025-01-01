@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace mztx\wp\plugin\SimpleEt;
 
+use function add_filter;
+use function basename;
+use function dirname;
+use function file_get_contents;
+use function json_decode;
+
 /**
  * Based on https://webfoersterei.de/blog/wordpress-plugins-update-hook/
  */

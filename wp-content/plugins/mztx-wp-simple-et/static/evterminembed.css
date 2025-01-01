@@ -1,0 +1,11 @@
+.evtermine-embedded {
+    width: 100%;
+}
+
+.iframe-height--80vh {
+    height: 80vh;
+}
+
+.iframe-height--50vh {
+    min-height: 50vh;
+}
