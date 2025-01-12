@@ -6,7 +6,14 @@ namespace mztx\wp\plugin\SimpleEt;
 
 use mztx\wp\plugin\SimpleEt\Helper\Attributes;
 
+use function add_action;
+use function add_shortcode;
 use function get_home_url;
+use function get_option;
+use function htmlentities;
+use function http_build_query;
+use function implode;
+use function sprintf;
 use function wp_add_inline_style;
 use function wp_enqueue_style;
 use function wp_register_style;
@@ -20,8 +27,8 @@ readonly class Shortcode
     public function __construct(
         private string $pluginBaseUrl,
     ) {
-        \add_shortcode('evtermine', [$this, 'codeEvTermine']);
-        \add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
+        add_shortcode('evtermine', [$this, 'codeEvTermine']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
     }
 
     public function enqueueScripts(): void
@@ -73,24 +80,25 @@ readonly class Shortcode
         $tags = $attributes->getStringArray('tags', ',');
         $tagsMode = $attributes->getFromEnumLowercase('tagsmodus', ['alle', 'eins'], 'eins');
 
+        $defaultVid = (int) get_option('mztxsimpleet_general_default_vid') ?? 0;
         $args = [
-            'vid' => $attributes->getInt('vid', MZTX_EV_TERMINE_VID_DEFAULT),
+            'vid' => $attributes->getInt('vid', $defaultVid),
             'css' => $cssUrl,
             'itemsPerPage' => $attributes->getInt('proSeite', $defaultPerPage),
-            'tags' => \implode($tagsMode === 'alle' ? '.' : ',', $tags),
+            'tags' => implode($tagsMode === 'alle' ? '.' : ',', $tags),
             'encoding' => 'utf8',
             'tpl' => '1',
         ];
 
         $url =
-            \sprintf(
+            sprintf(
                 '%s?%s',
                 $baseUrl,
-                \http_build_query($args, encoding_type: PHP_QUERY_RFC3986),
+                http_build_query($args, encoding_type: PHP_QUERY_RFC3986),
             );
 
         return '
-            <iframe class="evtermine-embedded iframe-height--' . $heightClass . '" src="' . \htmlentities($url) . '"></iframe>
+            <iframe class="evtermine-embedded iframe-height--' . $heightClass . '" src="' . htmlentities($url) . '"></iframe>
         ';
     }
 }

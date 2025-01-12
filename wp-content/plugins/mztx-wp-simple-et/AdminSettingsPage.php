@@ -9,8 +9,11 @@ use function add_options_page;
 use function add_settings_field;
 use function add_settings_section;
 use function current_user_can;
+use function do_settings_sections;
 use function get_option;
 use function register_setting;
+use function settings_fields;
+use function submit_button;
 use function wp_register_style;
 
 /**
@@ -37,6 +40,22 @@ readonly class AdminSettingsPage
                 // register a new setting for "mztxsimpleet" page
                 register_setting('mztxsimpleet', 'mztxsimpleet_styles_css_iframe');
                 register_setting('mztxsimpleet', 'mztxsimpleet_styles_css_wp');
+                register_setting('mztxsimpleet', 'mztxsimpleet_general_default_vid');
+
+                add_settings_section(
+                    'mztxsimpleet_general',
+                    'Allgemeine Einstellungen',
+                    [$this, 'renderSectionGeneral'],
+                    'mztxsimpleet',
+                );
+
+                add_settings_field(
+                    'mztxsimpleet_general_default_vid',
+                    'Veranstalter-ID (VID)',
+                    [$this, 'renderFieldVid'],
+                    'mztxsimpleet',
+                    'mztxsimpleet_general',
+                );
 
                 add_settings_section(
                     'mztxsimpleet_styles',
@@ -44,7 +63,6 @@ readonly class AdminSettingsPage
                     [$this, 'renderSectionStyles'],
                     'mztxsimpleet',
                 );
-
                 add_settings_field(
                     'mztxsimpleet_styles_css_iframe',
                     'iframe-Styles (css)',
@@ -80,7 +98,16 @@ readonly class AdminSettingsPage
         wp_enqueue_style('mztx-ev-termine-de-admin-styles');
     }
 
-    public function renderFieldCssIframe($a): void
+    public function renderFieldVid(): void
+    {
+        $setting = get_option('mztxsimpleet_general_default_vid');
+        ?>
+        <input type="number" min="1" max="9999999999" name="mztxsimpleet_general_default_vid" class="mztxsimpleet-general-default-vid" value="<?php echo isset($setting) ? (int) $setting : ''; ?>" />
+        <span class="description">Standard-Veranstalter-ID, die verwendet wird, wenn keine andere im Shortcode angegeben ist.</span>
+        <?php
+    }
+
+    public function renderFieldCssIframe(): void
     {
         $setting = get_option('mztxsimpleet_styles_css_iframe');
         ?>
@@ -89,13 +116,17 @@ readonly class AdminSettingsPage
         <?php
     }
 
-    public function renderFieldCssWp($a): void
+    public function renderFieldCssWp(): void
     {
         $setting = get_option('mztxsimpleet_styles_css_wp');
         ?>
         <textarea name="mztxsimpleet_styles_css_wp" class="mztxsimpleet-css-textarea"><?php echo isset($setting) ? esc_attr($setting) : ''; ?></textarea>
         <span class="description">Wird von Wordpress eingebunden und dient dazu, äußere Eigenschaften der Einbindung anzupassen (z.B. Höhe, Breite).</span>
         <?php
+    }
+
+    public function renderSectionGeneral(): void
+    {
     }
 
     public function renderSectionStyles(): void
@@ -116,9 +147,9 @@ readonly class AdminSettingsPage
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
             <form action="options.php" method="post">
                 <?php
-                \settings_fields('mztxsimpleet');
-                \do_settings_sections('mztxsimpleet');
-                \submit_button('Speichern');
+                settings_fields('mztxsimpleet');
+                do_settings_sections('mztxsimpleet');
+                submit_button('Speichern');
                 ?>
             </form>
         </div>

@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace mztx\wp\plugin\SimpleEt\Helper;
 
+use function array_filter;
+use function array_key_exists;
+use function explode;
+use function in_array;
+use function strtolower;
+
 readonly class Attributes
 {
     public function __construct(
         private array $attributes = [],
     ) {}
 
-
     public function getFromEnumLowercase(
         string $key,
         array $allowedValues,
         ?string $default,
     ): ?string {
-        $key = \strtolower($key);
-        if (false === \array_key_exists($key, $this->attributes)) {
+        $key = strtolower($key);
+        if (false === array_key_exists($key, $this->attributes)) {
             return $default;
         }
 
-        $value = \strtolower($this->attributes[$key]);
-        if (false === \in_array($value, $allowedValues)) {
+        $value = strtolower($this->attributes[$key]);
+        if (false === in_array($value, $allowedValues)) {
             return $default;
         }
 
@@ -33,8 +38,8 @@ readonly class Attributes
         string $key,
         ?int $default,
     ): ?int {
-        $key = \strtolower($key);
-        if (false === \array_key_exists($key, $this->attributes)) {
+        $key = strtolower($key);
+        if (false === array_key_exists($key, $this->attributes)) {
             return $default;
         }
 
@@ -45,8 +50,8 @@ readonly class Attributes
         string $key,
         ?string $default = null,
     ): ?string {
-        $key = \strtolower($key);
-        if (false === \array_key_exists($key, $this->attributes)) {
+        $key = strtolower($key);
+        if (false === array_key_exists($key, $this->attributes)) {
             return $default;
         }
 
@@ -58,6 +63,6 @@ readonly class Attributes
         ?string $separator = ',',
     ): array {
         $rawValue = $this->getString($key, '');
-        return \array_filter(\explode($separator, $rawValue));
+        return array_filter(explode($separator, $rawValue));
     }
 }

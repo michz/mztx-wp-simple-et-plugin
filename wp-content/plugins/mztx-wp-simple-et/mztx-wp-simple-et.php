@@ -23,9 +23,6 @@ const MZTX_WP_SIMPLE_ET_PLUGIN_SLUG = 'mztx-wp-simple-et';
 const MZTX_WP_SIMPLE_ET_PLUGIN_VERSION = '{{ version }}';
 const MZTX_EV_TERMINE_NAMESPACE_PREFIX = 'mztx\\wp\\plugin\\SimpleEt\\';
 
-// Veranstalter-ID von evangelische-termine.de
-const MZTX_EV_TERMINE_VID_DEFAULT = 2343;
-
 $mztxEvTermineNamespacePrefixLength = \strlen(MZTX_EV_TERMINE_NAMESPACE_PREFIX);
 \spl_autoload_register(function (string $class) use ($mztxEvTermineNamespacePrefixLength) {
     if (false === \str_starts_with($class, MZTX_EV_TERMINE_NAMESPACE_PREFIX)) {
@@ -38,14 +35,7 @@ $mztxEvTermineNamespacePrefixLength = \strlen(MZTX_EV_TERMINE_NAMESPACE_PREFIX);
 
 $pluginBaseUrl = \plugin_dir_url(__FILE__);
 
-// create instance of our classes
-$mztxevtermineShortcode = new Shortcode(
-    $pluginBaseUrl,
-);
-
-$mztxWpSimpleEtPluginUpdater = new Updater(
-    MZTX_WP_SIMPLE_ET_PLUGIN_SLUG,
-);
-
+(new Shortcode($pluginBaseUrl));
 (new AdminSettingsPage());
 (new Router());
+(new Updater(MZTX_WP_SIMPLE_ET_PLUGIN_SLUG));
