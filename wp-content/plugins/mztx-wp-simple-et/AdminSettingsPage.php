@@ -25,13 +25,15 @@ readonly class AdminSettingsPage
     {
         add_action(
             'admin_menu',
-            fn () => add_options_page(
-                'Einstellungen für evangelische-termine.de',
-                'evangelische-termine.de',
-                'manage_options',
-                'mztx-simple-et',
-                [$this, 'optionsPageHtml'],
-            )
+            function () {
+                add_options_page(
+                    'Einstellungen für evangelische-termine.de',
+                    'evangelische-termine.de',
+                    'manage_options',
+                    'mztx-simple-et',
+                    [$this, 'optionsPageHtml'],
+                );
+            }
         );
 
         add_action(
@@ -83,7 +85,7 @@ readonly class AdminSettingsPage
         add_action('admin_enqueue_scripts', [$this, 'adminEnqueueScripts']);
     }
 
-    public function adminEnqueueScripts($hook): void
+    public function adminEnqueueScripts(string $hook): void
     {
         if ('settings_page_mztx-simple-et' !== $hook) {
             return;

@@ -21,7 +21,13 @@ readonly class Updater
         add_filter('update_plugins_michz.github.io', [$this, 'plugin_update_handler'], 10, 4);
     }
 
-    public function plugin_update_handler($updateInfo, $pluginHeaders, $pluginFile, $language)
+    /**
+     * @param array<array-key, mixed>|false $updateInfo
+     * @param array<array-key, mixed> $pluginHeaders
+     * @param array<array-key, string> $language
+     * @return object|false
+     */
+    public function plugin_update_handler(array|false $updateInfo, array $pluginHeaders, string $pluginFile, array $language): object|false
     {
         $requestedSlug = basename(dirname($pluginFile));
         if ($requestedSlug !== $this->slug) {
@@ -30,6 +36,10 @@ readonly class Updater
 
         // @TODO Error handling etc.
         $response = @file_get_contents($pluginHeaders['UpdateURI']);
+        if ($response === false) {
+            return false;
+        }
+
         return @json_decode($response) ?? false;
     }
 }

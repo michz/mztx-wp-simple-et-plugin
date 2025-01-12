@@ -18,7 +18,7 @@ class Router
         add_action('parse_request', [$this, 'parse_request'], 30);
     }
 
-    public function parse_request(\WP $environment): ?\WP
+    public function parse_request(\WP $environment): void
     {
         if (isset($_GET['simple-et-file'])) {
             if ($_GET['simple-et-file'] === 'cssiframe') {
@@ -34,7 +34,5 @@ class Router
                 exit;
             }
         }
-
-        return $environment;
     }
 }

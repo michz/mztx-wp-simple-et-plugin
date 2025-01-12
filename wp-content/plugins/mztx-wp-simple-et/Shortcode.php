@@ -50,6 +50,9 @@ readonly class Shortcode
         }
     }
 
+    /**
+     * @param array<array-key, string> $atts
+     */
     public function codeEvTermine(array $atts, ?string $content, string $shortcodeTag): string
     {
         $defaultFilter = 'kalender';
@@ -80,7 +83,7 @@ readonly class Shortcode
         $tags = $attributes->getStringArray('tags', ',');
         $tagsMode = $attributes->getFromEnumLowercase('tagsmodus', ['alle', 'eins'], 'eins');
 
-        $defaultVid = (int) get_option('mztxsimpleet_general_default_vid') ?? 0;
+        $defaultVid = (int) (get_option('mztxsimpleet_general_default_vid') ?? 0);
         $args = [
             'vid' => $attributes->getInt('vid', $defaultVid),
             'css' => $cssUrl,

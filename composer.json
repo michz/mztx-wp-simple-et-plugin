@@ -1,6 +1,6 @@
 {
     "name": "mztx/mztx-wp-simple-et-plugin",
-    "type": "project",
+    "description": "A very basic Wordpress plugin to embed event calendars from evangelische-termine.de .",
     "license": "MIT",
     "authors": [
         {
@@ -10,5 +10,15 @@
     ],
     "require": {
         "php": ">=8.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "phpstan/extension-installer": "^1.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }

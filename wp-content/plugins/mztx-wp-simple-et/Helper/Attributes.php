@@ -12,10 +12,16 @@ use function strtolower;
 
 readonly class Attributes
 {
+    /**
+     * @param array<array-key, string> $attributes
+     */
     public function __construct(
         private array $attributes = [],
     ) {}
 
+    /**
+     * @param array<array-key, string> $allowedValues
+     */
     public function getFromEnumLowercase(
         string $key,
         array $allowedValues,
@@ -48,8 +54,8 @@ readonly class Attributes
 
     public function getString(
         string $key,
-        ?string $default = null,
-    ): ?string {
+        string $default = '',
+    ): string {
         $key = strtolower($key);
         if (false === array_key_exists($key, $this->attributes)) {
             return $default;
@@ -58,10 +64,17 @@ readonly class Attributes
         return $this->attributes[$key];
     }
 
+    /**
+     * @return array<array-key, string>
+     */
     public function getStringArray(
         string $key,
-        ?string $separator = ',',
+        string $separator = ',',
     ): array {
+        if ($separator === '') {
+            $separator = ',';
+        }
+
         $rawValue = $this->getString($key, '');
         return array_filter(explode($separator, $rawValue));
     }
