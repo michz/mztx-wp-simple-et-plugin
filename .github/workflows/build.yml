@@ -67,7 +67,7 @@ jobs:
         run: |
           mkdir dist
           cd wp-content/plugins/mztx-wp-simple-et
-          zip ../../../dist/mztx-wp-simple-et.zip *
+          zip -r ../../../dist/mztx-wp-simple-et.zip *
 
       - name: Create Release
         id: create_release
