@@ -1,14 +1,50 @@
 name: Build
 
-on:
-  push:
-    # Pattern matched against refs/tags
-    tags:
-      - '*' # Push events to every tag not containing /
+on: push
 
 jobs:
+  test:
+    strategy:
+      matrix:
+        php_version: [ '8.2', '8.3', '8.4' ]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php_version }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print versions
+        run: |
+          php --version
+          composer --version
+          cat /etc/os-release
+
+      - name: Composer install
+        run: |
+          composer install
+
+      - name: PHP lint
+        run: |
+          shopt -s globstar
+          php -l wp-content/plugins/mztx-wp-simple-et/*.php wp-content/plugins/mztx-wp-simple-et/**/*.php
+
+      - name: Composer validate
+        run: |
+          composer validate
+
+      - name: phpstan
+        run: |
+          php vendor/bin/phpstan analyse
+
   package:
-    #if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
+    needs: [test]
     runs-on: ubuntu-24.04
     permissions:
       contents: write
