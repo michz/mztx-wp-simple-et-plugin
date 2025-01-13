@@ -14,6 +14,7 @@ use function htmlentities;
 use function http_build_query;
 use function implode;
 use function sprintf;
+use function trim;
 use function wp_add_inline_style;
 use function wp_enqueue_style;
 use function wp_register_style;
@@ -76,7 +77,10 @@ readonly class Shortcode
             default => self::EVTERMINE_IFRAME_URL_FORMAT_TEASER,
         };
 
-        $cssUrl = get_home_url() . '?simple-et-file=cssiframe';
+        $cssUrl = trim(get_option('mztxsimpleet_styles_css_iframe_external_url', ''));
+        if ($cssUrl === '') {
+            $cssUrl = get_home_url() . '?simple-et-file=cssiframe';
+        }
 
         $heightClass = $attributes->getFromEnumLowercase('hoehe', ['50vh', '80vh'], '80vh');
 

@@ -10,6 +10,7 @@ use function add_settings_field;
 use function add_settings_section;
 use function current_user_can;
 use function do_settings_sections;
+use function esc_attr;
 use function get_option;
 use function register_setting;
 use function settings_fields;
@@ -41,6 +42,7 @@ readonly class AdminSettingsPage
             function () {
                 // register a new setting for "mztxsimpleet" page
                 register_setting('mztxsimpleet', 'mztxsimpleet_styles_css_iframe');
+                register_setting('mztxsimpleet', 'mztxsimpleet_styles_css_iframe_external_url');
                 register_setting('mztxsimpleet', 'mztxsimpleet_styles_css_wp');
                 register_setting('mztxsimpleet', 'mztxsimpleet_general_default_vid');
 
@@ -69,6 +71,13 @@ readonly class AdminSettingsPage
                     'mztxsimpleet_styles_css_iframe',
                     'iframe-Styles (css)',
                     [$this, 'renderFieldCssIframe'],
+                    'mztxsimpleet',
+                    'mztxsimpleet_styles',
+                );
+                add_settings_field(
+                    'mztxsimpleet_styles_css_iframe_external_url',
+                    'iframe-Styles (externe URL)',
+                    [$this, 'renderFieldCssIframeExternalUrl'],
                     'mztxsimpleet',
                     'mztxsimpleet_styles',
                 );
@@ -115,6 +124,15 @@ readonly class AdminSettingsPage
         ?>
         <textarea name="mztxsimpleet_styles_css_iframe" class="mztxsimpleet-css-textarea"><?php echo isset($setting) ? esc_attr($setting) : ''; ?></textarea>
         <span class="description">Wird innerhalb der eingebundenen Seite geladen und dient dazu, das Aussehen der eingebundenen Seite anzupassen.</span>
+        <?php
+    }
+
+    public function renderFieldCssIframeExternalUrl(): void
+    {
+        $setting = get_option('mztxsimpleet_styles_css_iframe_external_url');
+        ?>
+        <input type="text" name="mztxsimpleet_styles_css_iframe_external_url" class="mztxsimpleet-css-url" value="<?php echo isset($setting) ? esc_attr($setting) : ''; ?>" />
+        <span class="description">URL zu externem Stylesheet, das im iframe geladen werden soll. Wenn diese URL gesetzt ist, kann kein CSS manuell angegeben werden.</span>
         <?php
     }
 
