@@ -105,7 +105,7 @@ readonly class Shortcode
             );
 
         return '
-            <iframe class="evtermine-embedded iframe-height--' . $heightClass . '" src="' . htmlentities($url) . '"></iframe>
+            <iframe sandbox="allow-scripts" class="evtermine-embedded iframe-height--' . $heightClass . '" src="' . htmlentities($url) . '"></iframe>
         ';
     }
 }
