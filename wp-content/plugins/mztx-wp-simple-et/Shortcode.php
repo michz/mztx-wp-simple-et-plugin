@@ -56,6 +56,31 @@ readonly class Shortcode
      */
     public function codeEvTermine(array $atts, ?string $content, string $shortcodeTag): string
     {
+        $attributes = new Attributes($atts);
+
+        $widgetId = $attributes->getString('widget-id');
+
+        if (empty($widgetId)) {
+            return $this->legacyCodeEvTermine($atts, $content, $shortcodeTag);
+        }
+
+        return '
+            <script>
+                var e = document.createElement("script");
+                e.setAttribute("type","text/javascript");
+                e.setAttribute("src", "' . $this->pluginBaseUrl . 'external/et/etproxy.php?ljs");
+                var h=document.getElementsByTagName("head")[0];
+                h.appendChild(e);
+            </script>
+            <div data-conf="' . $widgetId . '" id="et_widget"></div>
+        ';
+    }
+
+    /**
+     * @param array<array-key, string> $atts
+     */
+    public function legacyCodeEvTermine(array $atts, ?string $content, string $shortcodeTag): string
+    {
         $defaultFilter = 'kalender';
         $allowedFilters = ['dropdown', 'kalender'];
         $defaultPerPage = 10;
