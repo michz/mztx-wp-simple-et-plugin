@@ -2,3 +2,5 @@ parameters:
     level: 8
     paths:
         - wp-content/plugins/mztx-wp-simple-et
+    excludePaths:
+        - 'wp-content/plugins/mztx-wp-simple-et/external'

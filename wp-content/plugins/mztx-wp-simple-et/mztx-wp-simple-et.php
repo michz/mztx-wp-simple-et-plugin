@@ -34,8 +34,13 @@ $mztxEvTermineNamespacePrefixLength = \strlen(MZTX_EV_TERMINE_NAMESPACE_PREFIX);
 });
 
 $pluginBaseUrl = \plugin_dir_url(__FILE__);
+$pluginBasePath = \plugin_dir_path(__FILE__);
 
 (new Shortcode($pluginBaseUrl));
 (new AdminSettingsPage());
-(new Router());
+(new Router($pluginBasePath));
 (new Updater(MZTX_WP_SIMPLE_ET_PLUGIN_SLUG));
+
+\register_activation_hook(__FILE__, function () {
+    \flush_rewrite_rules();
+});
